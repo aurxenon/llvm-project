@@ -51,6 +51,7 @@ public:
     aarch64,        // AArch64 (little endian): aarch64
     aarch64_be,     // AArch64 (big endian): aarch64_be
     aarch64_32,     // AArch64 (little endian) ILP32: aarch64_32
+    alpha,          // DEC Alpha
     arc,            // ARC: Synopsys ARC
     avr,            // AVR: Atmel AVR microcontroller
     bpfel,          // eBPF or extended BPF or 64-bit BPF (little endian)

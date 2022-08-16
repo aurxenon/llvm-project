@@ -469,6 +469,12 @@ TEST(TripleTest, ParsedIDs) {
   EXPECT_EQ(Triple::Linux, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
+  T = Triple("alpha-linux-gnu");
+  EXPECT_EQ(Triple::alpha, T.getArch());
+  EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
+  EXPECT_EQ(Triple::Linux, T.getOS());
+  EXPECT_EQ(Triple::GNU, T.getEnvironment());
+
   T = Triple("armv7hl-suse-linux-gnueabi");
   EXPECT_EQ(Triple::arm, T.getArch());
   EXPECT_EQ(Triple::SUSE, T.getVendor());
@@ -1318,6 +1324,10 @@ TEST(TripleTest, BitWidthArchVariants) {
   EXPECT_EQ(Triple::armeb, T.get32BitArchVariant().getArch());
   EXPECT_EQ(Triple::aarch64_be, T.get64BitArchVariant().getArch());
 
+  T.setArch(Triple::alpha);
+  EXPECT_EQ(Triple::UnknownArch, T.get32BitArchVariant().getArch());
+  EXPECT_EQ(Triple::alpha, T.get64BitArchVariant().getArch());
+
   T.setArch(Triple::renderscript32);
   EXPECT_EQ(Triple::renderscript32, T.get32BitArchVariant().getArch());
   EXPECT_EQ(Triple::renderscript64, T.get64BitArchVariant().getArch());
@@ -1363,6 +1373,10 @@ TEST(TripleTest, EndianArchVariants) {
   T.setArch(Triple::aarch64);
   EXPECT_EQ(Triple::aarch64_be, T.getBigEndianArchVariant().getArch());
   EXPECT_EQ(Triple::aarch64, T.getLittleEndianArchVariant().getArch());
+
+  T.setArch(Triple::alpha);
+  EXPECT_EQ(Triple::UnknownArch, T.getBigEndianArchVariant().getArch());
+  EXPECT_EQ(Triple::alpha, T.getLittleEndianArchVariant().getArch());
 
   T.setArch(Triple::armeb);
   EXPECT_EQ(Triple::armeb, T.getBigEndianArchVariant().getArch());

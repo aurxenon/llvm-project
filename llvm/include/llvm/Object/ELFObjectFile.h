@@ -1224,6 +1224,8 @@ StringRef ELFObjectFile<ELFT>::getFileFormatName() const {
       return "elf64-x86-64";
     case ELF::EM_AARCH64:
       return (IsLittleEndian ? "elf64-littleaarch64" : "elf64-bigaarch64");
+    case ELF::EM_ALPHA:
+      return "elf64-alpha";
     case ELF::EM_PPC64:
       return (IsLittleEndian ? "elf64-powerpcle" : "elf64-powerpc");
     case ELF::EM_RISCV:
@@ -1263,6 +1265,8 @@ template <class ELFT> Triple::ArchType ELFObjectFile<ELFT>::getArch() const {
     return Triple::x86_64;
   case ELF::EM_AARCH64:
     return IsLittleEndian ? Triple::aarch64 : Triple::aarch64_be;
+  case ELF::EM_ALPHA:
+    return Triple::alpha;
   case ELF::EM_ARM:
     return Triple::arm;
   case ELF::EM_AVR:

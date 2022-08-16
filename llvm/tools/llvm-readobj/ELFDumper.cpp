@@ -1493,6 +1493,11 @@ const EnumEntry<unsigned> ElfHeaderMipsFlags[] = {
   ENUM_ENT(EF_MIPS_ARCH_64R6, "mips64r6")
 };
 
+const EnumEntry<unsigned> ElfHeaderAlphaFlags[] = {
+  ENUM_ENT(EF_ALPHA_32BIT, "32bit"),
+  ENUM_ENT(EF_ALPHA_CANRELAX, "canrelax"),
+};
+
 const EnumEntry<unsigned> ElfHeaderAMDGPUFlagsABIVersion3[] = {
   LLVM_READOBJ_ENUM_ENT(ELF, EF_AMDGPU_MACH_NONE),
   LLVM_READOBJ_ENUM_ENT(ELF, EF_AMDGPU_MACH_R600_R600),
@@ -3363,6 +3368,8 @@ template <class ELFT> void GNUELFDumper<ELFT>::printFileHeaders() {
                    unsigned(ELF::EF_MIPS_MACH));
   else if (e.e_machine == EM_RISCV)
     ElfFlags = printFlags(e.e_flags, makeArrayRef(ElfHeaderRISCVFlags));
+  else if (e.e_machine == EM_ALPHA)
+    ElfFlags = printFlags(e.e_flags, makeArrayRef(ElfHeaderAlphaFlags));
   else if (e.e_machine == EM_AVR)
     ElfFlags = printFlags(e.e_flags, makeArrayRef(ElfHeaderAVRFlags),
                           unsigned(ELF::EF_AVR_ARCH_MASK));

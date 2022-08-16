@@ -154,7 +154,7 @@ enum {
   EM_RH32 = 38,          // TRW RH-32
   EM_RCE = 39,           // Motorola RCE
   EM_ARM = 40,           // ARM
-  EM_ALPHA = 41,         // DEC Alpha
+  EM_ALPHA = 36902,      // DEC Alpha (Technically, it's 41. In practice, nobody uses it.)
   EM_SH = 42,            // Hitachi SH
   EM_SPARCV9 = 43,       // SPARC V9
   EM_TRICORE = 44,       // Siemens TriCore
@@ -427,6 +427,18 @@ enum {
 enum {
   // Symbol may follow different calling convention than base PCS.
   STO_AARCH64_VARIANT_PCS = 0x80
+};
+
+// Alpha Specific e_flags
+enum : unsigned {
+  EF_ALPHA_32BIT = 0x00000001,   // All addresses are below 2GB
+  EF_ALPHA_CANRELAX = 0x00000002 // All relocations needed for linker 
+                                 // relaxation are present
+};
+
+// ELF Relocation type for Alpha.
+enum {
+#include "ELFRelocs/Alpha.def"
 };
 
 // ARM Specific e_flags
