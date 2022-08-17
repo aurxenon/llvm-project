@@ -1,5 +1,12 @@
 add_llvm_component_group(Alpha)
 
+set(LLVM_TARGET_DEFINITIONS Alpha.td)
+
+tablegen(LLVM AlphaGenRegisterInfo.inc -gen-register-info)
+tablegen(LLVM AlphaGenInstrInfo.inc -gen-instr-info)
+
+add_public_tablegen_target(AlphaCommonTableGen)
+
 add_llvm_target(AlphaCodeGen
   AlphaTargetMachine.cpp
 
