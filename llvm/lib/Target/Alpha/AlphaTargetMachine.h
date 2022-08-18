@@ -13,6 +13,7 @@
 #ifndef LLVM_LIB_TARGET_ALPHA_ALPHATARGETMACHINE_H
 #define LLVM_LIB_TARGET_ALPHA_ALPHATARGETMACHINE_H
 
+#include "MCTargetDesc/AlphaMCTargetDesc.h"
 #include "llvm/CodeGen/SelectionDAGTargetInfo.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/Target/TargetMachine.h"
@@ -33,8 +34,6 @@ public:
     return TLOF.get();
   }
 };
-
-Target &getTheAlphaTarget();
 } // namespace llvm
 
 #endif

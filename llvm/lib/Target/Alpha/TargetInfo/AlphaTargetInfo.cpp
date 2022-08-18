@@ -18,8 +18,6 @@ Target &getTheAlphaTarget() {
 } // namespace llvm
 
 extern "C" void LLVMInitializeAlphaTargetInfo() {
-  RegisterTarget<Triple::alpha> X(getTheAlphaTarget(), "alpha",
-                                    "Alpha", "Alpha");
+  RegisterTarget<Triple::alpha> X(getTheAlphaTarget(), "alpha", "Alpha",
+                                  "Alpha");
 }
-
-extern "C" void LLVMInitializeAlphaTargetMC() {}
