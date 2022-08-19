@@ -5,6 +5,7 @@ set(LLVM_TARGET_DEFINITIONS Alpha.td)
 tablegen(LLVM AlphaGenRegisterInfo.inc -gen-register-info)
 tablegen(LLVM AlphaGenInstrInfo.inc -gen-instr-info)
 tablegen(LLVM AlphaGenMCCodeEmitter.inc -gen-emitter)
+tablegen(LLVM AlphaGenAsmMatcher.inc -gen-asm-matcher)
 
 add_public_tablegen_target(AlphaCommonTableGen)
 
@@ -28,5 +29,6 @@ add_llvm_target(AlphaCodeGen
   Alpha
 )
 
+add_subdirectory(AsmParser)
 add_subdirectory(MCTargetDesc)
 add_subdirectory(TargetInfo)

@@ -89,8 +89,7 @@ def OPC_BNE       : AlphaOpcode<"BNE",       0b111101>; // 0x3d
 def OPC_BGE       : AlphaOpcode<"BGE",       0b111110>; // 0x3e
 def OPC_BGT       : AlphaOpcode<"BGT",       0b111111>; // 0x3f
 
-class AlphaInst<dag outs, dag ins, string asmstr,
-             list<dag> pattern, InstFormat format>
+class AlphaInst<dag outs, dag ins, string asmstr, list<dag> pattern, InstFormat format> 
     : Instruction {
   field bits<32> Inst;
   // SoftFail is a field the disassembler can use to provide a way for

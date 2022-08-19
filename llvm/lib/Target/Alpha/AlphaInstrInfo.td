@@ -8,7 +8,27 @@
 
 include "AlphaInstrFormats.td"
 
-def uimm8 : Operand<i64>;
+class ImmAsmOperand<string prefix, int width, string suffix> : AsmOperandClass {
+  let Name = prefix # "Imm" # width # suffix;
+  let DiagnosticType = !strconcat("Invalid", Name);
+  let RenderMethod = "addImmOperands";
+}
+
+class SImmAsmOperand<int width, string suffix = "">
+    : ImmAsmOperand<"S", width, suffix> {
+}
+
+class UImmAsmOperand<int width, string suffix = "">
+    : ImmAsmOperand<"U", width, suffix> {
+}
+
+def uimm8 : Operand<i64> {
+  let ParserMatchClass = UImmAsmOperand<8>;
+}
+
+//===----------------------------------------------------------------------===//
+// Basic Integer Instructions
+//===----------------------------------------------------------------------===//
 
 let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in {
 def ADDLri : AlphaInstOperateLit<

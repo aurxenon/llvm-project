@@ -20,14 +20,19 @@ def FeatureCIX : SubtargetFeature<"cix", "HasCIX", "true",
 include "AlphaRegisterInfo.td"
 include "AlphaInstrInfo.td"
 
-def AlphaInstrInfo : InstrInfo;
-
 def : ProcessorModel<"ev5", NoSchedModel, []>;
 def : ProcessorModel<"ev56", NoSchedModel, [FeatureBWX]>;
 def : ProcessorModel<"pca56", NoSchedModel, [FeatureBWX, FeatureMVI]>;
 def : ProcessorModel<"ev6", NoSchedModel, [FeatureBWX, FeatureMVI, FeatureFIX]>;
 def : ProcessorModel<"ev67", NoSchedModel, [FeatureBWX, FeatureMVI, FeatureFIX, FeatureCIX]>;
 
+def AlphaInstrInfo : InstrInfo;
+
+def AlphaAsmParser : AsmParser {
+  let ShouldEmitMatchRegisterAltName = 1;
+}
+
 def Alpha : Target {
   let InstructionSet = AlphaInstrInfo;
+  let AssemblyParsers = [AlphaAsmParser];
 }
