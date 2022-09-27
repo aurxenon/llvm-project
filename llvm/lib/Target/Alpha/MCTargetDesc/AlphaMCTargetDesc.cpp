@@ -28,6 +28,9 @@
 #define GET_REGINFO_MC_DESC
 #include "AlphaGenRegisterInfo.inc"
 
+#define GET_SUBTARGETINFO_MC_DESC
+#include "AlphaGenSubtargetInfo.inc"
+
 using namespace llvm;
 
 static MCInstrInfo *createAlphaMCInstrInfo() {
@@ -56,6 +59,11 @@ static MCInstPrinter *createAlphaMCInstPrinter(const Triple &T,
   return new AlphaInstPrinter(MAI, MII, MRI);
 }
 
+static MCSubtargetInfo *
+createAlphaMCSubtargetInfo(const Triple &TT, StringRef CPU, StringRef FS) {
+  return createAlphaMCSubtargetInfoImpl(TT, CPU, CPU, FS);
+}
+
 extern "C" void LLVMInitializeAlphaTargetMC() {
   TargetRegistry::RegisterMCAsmInfo(getTheAlphaTarget(), createAlphaMCAsmInfo);
   TargetRegistry::RegisterMCInstrInfo(getTheAlphaTarget(),
@@ -68,4 +76,6 @@ extern "C" void LLVMInitializeAlphaTargetMC() {
                                         createAlphaMCCodeEmitter);
   TargetRegistry::RegisterMCInstPrinter(getTheAlphaTarget(),
                                         createAlphaMCInstPrinter);
+  TargetRegistry::RegisterMCSubtargetInfo(getTheAlphaTarget(),
+                                          createAlphaMCSubtargetInfo);
 }
