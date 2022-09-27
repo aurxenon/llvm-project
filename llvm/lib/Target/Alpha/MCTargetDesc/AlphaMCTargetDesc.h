@@ -49,6 +49,7 @@ std::unique_ptr<MCObjectTargetWriter> createAlphaELFObjectWriter(uint8_t OSABI);
 
 // Defines symbolic names for the Alpha instructions.
 #define GET_INSTRINFO_ENUM
+#define GET_INSTRINFO_MC_HELPER_DECLS
 #include "AlphaGenInstrInfo.inc"
 
 #endif

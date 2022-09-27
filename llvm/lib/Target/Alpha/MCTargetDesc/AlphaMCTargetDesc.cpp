@@ -12,6 +12,7 @@
 
 #include "AlphaMCTargetDesc.h"
 #include "AlphaMCAsmInfo.h"
+#include "MCTargetDesc/AlphaInstPrinter.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/MC/MCAsmInfo.h"
 #include "llvm/MC/MCInstrInfo.h"
@@ -47,6 +48,14 @@ static MCAsmInfo *createAlphaMCAsmInfo(const MCRegisterInfo &MRI,
   return new AlphaMCAsmInfo(TT);
 }
 
+static MCInstPrinter *createAlphaMCInstPrinter(const Triple &T,
+                                               unsigned SyntaxVariant,
+                                               const MCAsmInfo &MAI,
+                                               const MCInstrInfo &MII,
+                                               const MCRegisterInfo &MRI) {
+  return new AlphaInstPrinter(MAI, MII, MRI);
+}
+
 extern "C" void LLVMInitializeAlphaTargetMC() {
   TargetRegistry::RegisterMCAsmInfo(getTheAlphaTarget(), createAlphaMCAsmInfo);
   TargetRegistry::RegisterMCInstrInfo(getTheAlphaTarget(),
@@ -57,4 +66,6 @@ extern "C" void LLVMInitializeAlphaTargetMC() {
                                        createAlphaAsmBackend);
   TargetRegistry::RegisterMCCodeEmitter(getTheAlphaTarget(),
                                         createAlphaMCCodeEmitter);
+  TargetRegistry::RegisterMCInstPrinter(getTheAlphaTarget(),
+                                        createAlphaMCInstPrinter);
 }

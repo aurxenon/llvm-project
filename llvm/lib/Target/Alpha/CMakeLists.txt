@@ -6,6 +6,7 @@ tablegen(LLVM AlphaGenRegisterInfo.inc -gen-register-info)
 tablegen(LLVM AlphaGenInstrInfo.inc -gen-instr-info)
 tablegen(LLVM AlphaGenMCCodeEmitter.inc -gen-emitter)
 tablegen(LLVM AlphaGenAsmMatcher.inc -gen-asm-matcher)
+tablegen(LLVM AlphaGenAsmWriter.inc -gen-asm-writer)
 
 add_public_tablegen_target(AlphaCommonTableGen)
 
