@@ -112,8 +112,8 @@ class AlphaInst<dag outs, dag ins, string asmstr, list<dag> pattern, InstFormat 
 }
 
 // Pseudo instructions
-class Pseudo<dag outs, dag ins, list<dag> pattern, string asmstr = "">
-    : AlphaInst<outs, ins, asmstr, pattern, InstFormatPseudo> {
+class Pseudo<dag outs, dag ins, string asmstr = "">
+    : AlphaInst<outs, ins, asmstr, [], InstFormatPseudo> {
   let isPseudo = 1;
   let isCodeGenOnly = 1;
 }
@@ -132,7 +132,7 @@ class Pseudo<dag outs, dag ins, list<dag> pattern, string asmstr = "">
 // For further reference, check Table B-2 in the appendix of the Alpha
 // Architecture Reference Manual (Applies mainly to /S qualifier).
 class PseudoQuietFCMP<RegisterClass Ty>
-    : Pseudo<(outs GPR:$rd), (ins Ty:$rs1, Ty:$rs2), []> {
+    : Pseudo<(outs GPR:$rd), (ins Ty:$rs1, Ty:$rs2)> {
   let hasSideEffects = 1;
   let mayLoad = 0;
   let mayStore = 0;
@@ -160,9 +160,10 @@ class AlphaInstMemoryFunction<AlphaOpcode opcode, bits<16> func, dag outs, dag i
   let Inst{15-0} = func;
 }
 
-class AlphaInstMemoryJumpHint<AlphaOpcode opcode, bits<16> hint, dag outs, dag ins, string asmstr>
+class AlphaInstMemoryJumpHint<AlphaOpcode opcode, bits<2> hint, dag outs, dag ins, string asmstr>
     : AlphaInstMemory<opcode, outs, ins, asmstr> {
-  let Inst{15-0} = hint;
+  let Inst{15-14} = hint;
+  let Inst{13-0} = 0;
 }
 
 class AlphaInstBranch<AlphaOpcode opcode, dag outs, dag ins, string asmstr>

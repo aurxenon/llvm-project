@@ -138,8 +138,18 @@ public:
     bool IsConstantImm = evaluateConstantImm(getImm(), Imm);
     return IsConstantImm && isUInt<N>(Imm);
   }
+  
+  template <unsigned N> bool IsSImm() const {
+    int64_t Imm;
+    if (!isImm())
+      return false;
+    bool IsConstantImm = evaluateConstantImm(getImm(), Imm);
+    return IsConstantImm && isInt<N>(Imm);
+  }
 
   bool isUImm8() { return IsUImm<8>(); }
+  bool isSImm21() { return IsSImm<21>(); }
+  bool isSImm16() { return IsSImm<16>(); }
 
   /// getStartLoc - Gets location of the first token of this operand
   SMLoc getStartLoc() const override { return StartLoc; }
