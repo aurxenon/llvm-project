@@ -24,14 +24,17 @@ class UImmAsmOperand<int width, string suffix = "">
 
 def uimm8 : Operand<i64> {
   let ParserMatchClass = UImmAsmOperand<8>;
+  let DecoderMethod = "decodeUImmOperand<8>";
 }
 
 def simm21 : Operand<i64> {
   let ParserMatchClass = SImmAsmOperand<21>;
+  let DecoderMethod = "decodeSImmOperand<21>";
 }
 
 def simm16 : Operand<i64> {
   let ParserMatchClass = SImmAsmOperand<16>;
+  let DecoderMethod = "decodeSImmOperand<16>";
 }
 
 //===----------------------------------------------------------------------===//
@@ -73,8 +76,8 @@ def BISri         : AlphaInstOperateLit<
         OPC_INTL, 0x20, (outs GPR:$rc), (ins GPR:$ra, uimm8:$imm), "bis $ra, $imm, $rc">;
 def XORri         : AlphaInstOperateLit<
         OPC_INTL, 0x40, (outs GPR:$rc), (ins GPR:$ra, uimm8:$imm), "xor $ra, $imm, $rc">;
-def SLri          : AlphaInstOperateLit<
-        OPC_INTL, 0x12, (outs GPR:$rc), (ins GPR:$ra, uimm8:$imm), "sl $ra, $imm, $rc">;
+def SLLri          : AlphaInstOperateLit<
+        OPC_INTS, 0x39, (outs GPR:$rc), (ins GPR:$ra, uimm8:$imm), "sll $ra, $imm, $rc">;
 def SRAri         : AlphaInstOperateLit<
         OPC_INTS, 0x3c, (outs GPR:$rc), (ins GPR:$ra, uimm8:$imm), "sra $ra, $imm, $rc">;
 def SRLri         : AlphaInstOperateLit<
@@ -122,8 +125,8 @@ def BISrr         : AlphaInstOperateReg<
         OPC_INTL, 0x20, (outs GPR:$rc), (ins GPR:$ra, GPR:$rb), "bis $ra, $rb, $rc">;
 def XORrr         : AlphaInstOperateReg<
         OPC_INTL, 0x40, (outs GPR:$rc), (ins GPR:$ra, GPR:$rb), "xor $ra, $rb, $rc">;
-def SLrr          : AlphaInstOperateReg<
-        OPC_INTL, 0x12, (outs GPR:$rc), (ins GPR:$ra, GPR:$rb), "sl $ra, $rb, $rc">;
+def SLLrr          : AlphaInstOperateReg<
+        OPC_INTS, 0x39, (outs GPR:$rc), (ins GPR:$ra, GPR:$rb), "sll $ra, $rb, $rc">;
 def SRArr         : AlphaInstOperateReg<
         OPC_INTS, 0x3c, (outs GPR:$rc), (ins GPR:$ra, GPR:$rb), "sra $ra, $rb, $rc">;
 def SRLrr         : AlphaInstOperateReg<
@@ -366,9 +369,9 @@ def ZAPNOTrr      : AlphaInstOperateReg<
 //===----------------------------------------------------------------------===//
 // Count Instruction eXtension Instructions
 //===----------------------------------------------------------------------===//
-def CTLZ          : AlphaInstOperateLit<
+def CTLZ          : AlphaInstOperateReg<
         OPC_FPTI, 0x32, (outs GPR:$rc), (ins GPR:$rb), "ctlz $rb, $rc">;
-def CTPOP         : AlphaInstOperateLit<
+def CTPOP         : AlphaInstOperateReg<
         OPC_FPTI, 0x30, (outs GPR:$rc), (ins GPR:$rb), "ctpop $rb, $rc">;
-def CTTZ          : AlphaInstOperateLit<
+def CTTZ          : AlphaInstOperateReg<
         OPC_FPTI, 0x33, (outs GPR:$rc), (ins GPR:$rb), "cttz $rb, $rc">;

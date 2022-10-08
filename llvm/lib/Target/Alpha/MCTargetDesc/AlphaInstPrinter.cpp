@@ -23,7 +23,6 @@ void AlphaInstPrinter::printInst(const MCInst *MI, uint64_t Address,
 }
 
 void AlphaInstPrinter::printRegName(raw_ostream &O, unsigned RegNo) const {
-  // This is for .cfi directives.
   O << getRegisterName(RegNo);
 }
 

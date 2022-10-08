@@ -8,6 +8,7 @@ tablegen(LLVM AlphaGenMCCodeEmitter.inc -gen-emitter)
 tablegen(LLVM AlphaGenAsmMatcher.inc -gen-asm-matcher)
 tablegen(LLVM AlphaGenAsmWriter.inc -gen-asm-writer)
 tablegen(LLVM AlphaGenSubtargetInfo.inc -gen-subtarget)
+tablegen(LLVM AlphaGenDisassemblerTables.inc -gen-disassembler)
 
 add_public_tablegen_target(AlphaCommonTableGen)
 
@@ -32,5 +33,6 @@ add_llvm_target(AlphaCodeGen
 )
 
 add_subdirectory(AsmParser)
+add_subdirectory(Disassembler)
 add_subdirectory(MCTargetDesc)
 add_subdirectory(TargetInfo)

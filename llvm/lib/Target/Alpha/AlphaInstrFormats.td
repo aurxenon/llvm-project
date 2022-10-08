@@ -163,7 +163,6 @@ class AlphaInstMemoryFunction<AlphaOpcode opcode, bits<16> func, dag outs, dag i
 class AlphaInstMemoryJumpHint<AlphaOpcode opcode, bits<2> hint, dag outs, dag ins, string asmstr>
     : AlphaInstMemory<opcode, outs, ins, asmstr> {
   let Inst{15-14} = hint;
-  let Inst{13-0} = 0;
 }
 
 class AlphaInstBranch<AlphaOpcode opcode, dag outs, dag ins, string asmstr>
@@ -203,9 +202,9 @@ class AlphaInstOperateReg<AlphaOpcode opcode, bits<7> func, dag outs, dag ins, s
 
 class AlphaInstOperateLit<AlphaOpcode opcode, bits<7> func, dag outs, dag ins, string asmstr>
     : AlphaInstOperate<opcode, func, outs, ins, asmstr, InstFormatLitOperate> {
-  bits<8> literal;
+  bits<8> imm;
 
-  let Inst{20-13} = literal;
+  let Inst{20-13} = imm;
   let is_literal = 1;
 }
 
