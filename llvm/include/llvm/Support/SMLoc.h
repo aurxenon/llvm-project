@@ -16,6 +16,7 @@
 
 #include "llvm/ADT/None.h"
 #include <cassert>
+#include <functional>
 
 namespace llvm {
 
@@ -60,5 +61,16 @@ public:
 };
 
 } // end namespace llvm
+
+namespace std {
+
+template <> struct hash<llvm::SMLoc> {
+  std::size_t operator()(llvm::SMLoc const &s) const {
+    return std::hash<std::size_t>()(
+        reinterpret_cast<std::size_t>(s.getPointer()));
+  }
+};
+
+} // end namespace std
 
 #endif // LLVM_SUPPORT_SMLOC_H
