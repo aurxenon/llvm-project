@@ -255,6 +255,7 @@ def STW           : AlphaInstMemoryDisp<
 }
 
 def NOP           : Pseudo<(outs), (ins), "nop">;
+def LDGP          : Pseudo<(outs), (ins), "ldgp">;
 
 //===----------------------------------------------------------------------===//
 // Byte Word eXtension Instructions
