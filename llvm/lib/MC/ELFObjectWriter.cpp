@@ -1448,9 +1448,11 @@ void ELFObjectWriter::recordRelocation(MCAssembler &Asm,
       (Parent->getType() == ELF::SHT_LLVM_CALL_GRAPH_PROFILE);
   uint64_t Addend = 0;
 
-  FixedValue = !RelocateWithSymbol && SymA && !SymA->isUndefined()
-                   ? C + Layout.getSymbolOffset(*SymA)
-                   : C;
+  if (!TargetObjectWriter->relocationIsRelativeWithinSection(Type)) {
+    FixedValue = !RelocateWithSymbol && SymA && !SymA->isUndefined()
+                    ? C + Layout.getSymbolOffset(*SymA)
+                    : C;
+  }
   if (hasRelocationAddend()) {
     Addend = FixedValue;
     FixedValue = 0;
