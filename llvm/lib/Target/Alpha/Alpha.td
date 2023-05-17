@@ -32,7 +32,13 @@ def AlphaAsmParser : AsmParser {
   let ShouldEmitMatchRegisterAltName = 1;
 }
 
+def AlphaAsmParserVariant : AsmParserVariant {
+  int Variant = 0;
+  string RegisterPrefix = "$";
+}
+
 def Alpha : Target {
   let InstructionSet = AlphaInstrInfo;
   let AssemblyParsers = [AlphaAsmParser];
+  let AssemblyParserVariants = [AlphaAsmParserVariant];
 }

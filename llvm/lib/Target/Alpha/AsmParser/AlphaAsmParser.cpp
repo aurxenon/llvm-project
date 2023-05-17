@@ -289,7 +289,7 @@ bool AlphaAsmParser::ParseRegister(unsigned &RegNo, SMLoc &StartLoc,
   RegNo = 0;
   StringRef Name = getLexer().getTok().getIdentifier();
 
-  if (!MatchRegisterName(Name) || !MatchRegisterAltName(Name)) {
+  if (!MatchRegisterName(Name)) {
     getParser().Lex(); // Eat identifier token.
     return false;
   }
@@ -307,15 +307,20 @@ OperandMatchResultTy AlphaAsmParser::parseRegister(OperandVector &Operands) {
   SMLoc S = getLoc();
   SMLoc E = SMLoc::getFromPointer(S.getPointer() - 1);
 
+  // Eat the $ prefix.
+  if (getLexer().getKind() == AsmToken::Dollar) {
+    getLexer().Lex();
+  } else {
+    return MatchOperand_NoMatch;
+  }
+
   switch (getLexer().getKind()) {
   default:
     return MatchOperand_NoMatch;
-  case AsmToken::Identifier:
-    StringRef Name = getLexer().getTok().getIdentifier();
+  case AsmToken::Integer:
+    StringRef Name = getLexer().getTok().getString();
     unsigned RegNo = MatchRegisterName(Name);
-    if (RegNo == 0) {
-      RegNo = MatchRegisterAltName(Name);
-      if (RegNo == 0)
+    if (!RegNo) {
         return MatchOperand_NoMatch;
     }
     getLexer().Lex();
