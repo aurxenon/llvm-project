@@ -34,7 +34,14 @@ def simm21 : Operand<i64> {
 
 def simm16 : Operand<i64> {
   let ParserMatchClass = SImmAsmOperand<16>;
+  let EncoderMethod = "getImmOpValue";
   let DecoderMethod = "decodeSImmOperand<16>";
+  let MCOperandPredicate = [{
+    int64_t Imm;
+    if (MCOp.evaluateAsConstantImm(Imm))
+      return isInt<16>(Imm);
+    return MCOp.isBareSymbolRef();
+  }];
 }
 
 //===----------------------------------------------------------------------===//

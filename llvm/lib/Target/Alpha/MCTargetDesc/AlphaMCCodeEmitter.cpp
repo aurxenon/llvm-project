@@ -10,7 +10,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "AlphaMCTargetDesc.h"
+#include "MCTargetDesc/AlphaFixupKinds.h"
+#include "MCTargetDesc/AlphaMCExpr.h"
+#include "MCTargetDesc/AlphaMCTargetDesc.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/MC/MCAsmInfo.h"
 #include "llvm/MC/MCCodeEmitter.h"
@@ -19,6 +21,7 @@
 #include "llvm/MC/MCInst.h"
 #include "llvm/MC/MCRegisterInfo.h"
 #include "llvm/MC/MCSymbol.h"
+#include "llvm/Support/Casting.h"
 #include "llvm/Support/EndianStream.h"
 #include "llvm/Support/raw_ostream.h"
 
@@ -27,6 +30,7 @@ using namespace llvm;
 #define DEBUG_TYPE "mccodeemitter"
 
 STATISTIC(MCNumEmitted, "Number of MC instructions emitted");
+STATISTIC(MCNumFixups, "Number of MC fixups created");
 
 namespace {
 class AlphaMCCodeEmitter : public MCCodeEmitter {
@@ -56,6 +60,10 @@ public:
   unsigned getMachineOpValue(const MCInst &MI, const MCOperand &MO,
                              SmallVectorImpl<MCFixup> &Fixups,
                              const MCSubtargetInfo &STI) const;
+
+  unsigned getImmOpValue(const MCInst &MI, unsigned OpNo,
+                         SmallVectorImpl<MCFixup> &Fixups,
+                         const MCSubtargetInfo &STI) const;
 };
 } // end anonymous namespace
 
@@ -84,6 +92,74 @@ AlphaMCCodeEmitter::getMachineOpValue(const MCInst &MI, const MCOperand &MO,
     return static_cast<unsigned>(MO.getImm());
 
   llvm_unreachable("Unhandled expression!");
+  return 0;
+}
+
+unsigned AlphaMCCodeEmitter::getImmOpValue(const MCInst &MI, unsigned OpNo,
+                                           SmallVectorImpl<MCFixup> &Fixups,
+                                           const MCSubtargetInfo &STI) const {
+  const MCOperand &MO = MI.getOperand(OpNo);
+
+  // If the destination is an immediate, there is nothing to do.
+  if (MO.isImm())
+    return MO.getImm();
+
+  assert(MO.isExpr() && "getImmOpValue expects only expressions or immediates");
+  const MCExpr *Expr = MO.getExpr();
+  MCExpr::ExprKind Kind = Expr->getKind();
+  Alpha::Fixups FixupKind = Alpha::fixup_alpha_invalid;
+  if (Kind == MCExpr::Target) {
+    const AlphaMCExpr *AlphaExpr = cast<AlphaMCExpr>(Expr);
+
+    switch (AlphaExpr->getKind()) {
+    case AlphaMCExpr::VK_ALPHA_None:
+    case AlphaMCExpr::VK_ALPHA_Invalid:
+      llvm_unreachable("Unhandled fixup kind!");
+    case AlphaMCExpr::VK_ALPHA_LITERAL:
+      FixupKind = Alpha::fixup_alpha_literal;
+      break;
+    case AlphaMCExpr::VK_ALPHA_GPDISP:
+      FixupKind = Alpha::fixup_alpha_gpdisp;
+      break;
+    case AlphaMCExpr::VK_ALPHA_GPDISP_LDA:
+      FixupKind = Alpha::fixup_alpha_gpdisp_lda;
+      break;
+    case AlphaMCExpr::VK_ALPHA_GPRELHIGH:
+      FixupKind = Alpha::fixup_alpha_gprelhigh;
+      break;
+    case AlphaMCExpr::VK_ALPHA_GPRELLOW:
+      FixupKind = Alpha::fixup_alpha_gprellow;
+      break;
+    case AlphaMCExpr::VK_ALPHA_LITUSE_ADDR:
+      FixupKind = Alpha::fixup_alpha_lituse_addr;
+      break;
+    case AlphaMCExpr::VK_ALPHA_LITUSE_BASE:
+      FixupKind = Alpha::fixup_alpha_lituse_base;
+      break;
+    case AlphaMCExpr::VK_ALPHA_LITUSE_BYTOFF:
+      FixupKind = Alpha::fixup_alpha_lituse_bytoff;
+      break;
+    case AlphaMCExpr::VK_ALPHA_LITUSE_JSR:
+      FixupKind = Alpha::fixup_alpha_lituse_jsr;
+      break;
+    case AlphaMCExpr::VK_ALPHA_LITUSE_JSRDIRECT:
+      FixupKind = Alpha::fixup_alpha_lituse_jsrdirect;
+      break;
+    case AlphaMCExpr::VK_ALPHA_LITUSE_TLSGD:
+      FixupKind = Alpha::fixup_alpha_lituse_tlsgd;
+      break;
+    case AlphaMCExpr::VK_ALPHA_LITUSE_TLSLDM:
+      FixupKind = Alpha::fixup_alpha_lituse_tlsldm;
+      break;
+    }
+  }
+
+  assert(FixupKind != Alpha::fixup_alpha_invalid && "Unhandled expression!");
+
+  Fixups.push_back(
+      MCFixup::create(0, Expr, MCFixupKind(FixupKind), MI.getLoc()));
+  ++MCNumFixups;
+
   return 0;
 }
 

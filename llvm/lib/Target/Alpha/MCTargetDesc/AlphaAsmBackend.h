@@ -23,6 +23,15 @@ public:
       : MCAsmBackend(support::little), OSABI(OSABI) {}
   ~AlphaAsmBackend() override {}
 
+  bool evaluateTargetFixup(const MCAssembler &Asm, const MCAsmLayout &Layout,
+                           const MCFixup &Fixup, const MCFragment *DF,
+                           const MCValue &Target, uint64_t &Value,
+                           bool &WasForced) override;
+
+  bool evaluateGPDisp(const MCAssembler &Asm, const MCAsmLayout &Layout,
+                      const MCFixup &Fixup, const MCFragment *DF,
+                      const MCValue &Target, uint64_t &Value, bool &WasForced);
+
   void applyFixup(const MCAssembler &Asm, const MCFixup &Fixup,
                   const MCValue &Target, MutableArrayRef<char> Data,
                   uint64_t Value, bool IsResolved,
@@ -31,11 +40,16 @@ public:
   std::unique_ptr<MCObjectTargetWriter>
   createObjectTargetWriter() const override;
 
+  bool shouldForceRelocation(const MCAssembler &Asm, const MCFixup &Fixup,
+                             const MCValue &Target) override;
+
   bool fixupNeedsRelaxation(const MCFixup &Fixup, uint64_t Value,
                             const MCRelaxableFragment *DF,
                             const MCAsmLayout &Layout) const override;
 
   unsigned getNumFixupKinds() const override;
+
+  const MCFixupKindInfo &getFixupKindInfo(MCFixupKind Kind) const override;
 
   bool mayNeedRelaxation(const MCInst &Inst,
                          const MCSubtargetInfo &STI) const override;
