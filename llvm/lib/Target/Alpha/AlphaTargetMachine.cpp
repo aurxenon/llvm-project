@@ -27,7 +27,7 @@ extern "C" void LLVMInitializeAlphaTarget() {
 }
 
 static std::string computeDataLayout(const Triple &TT) {
-  return "e-m:e-S128-p:64:64-i32:32:32-i64:64:64-a:64:128-n32:64";
+  return "e-m:e-S128-p:64:64-i32:32:32-i64:64:64-f128:128:128-a:0-n32:64";
 }
 
 static Reloc::Model getEffectiveRelocModel(const Triple &TT,
